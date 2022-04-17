@@ -1,7 +1,7 @@
 {
   "name": "dollar_bcv",
   "version": "1.0.0",
-  "description": "This is a script to query dollar in venezuela",
+  "description": "Esto es un proyecto para obtener el precio dolar a la tasa oficial, tambien de 3ras paginas",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
@@ -13,7 +13,7 @@
     "axios": "^0.22.0",
     "cheerio": "^1.0.0-rc.10",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "nodemon": "^2.0.13"
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
   }
 }
