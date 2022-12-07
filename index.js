@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-/* Hace el Scrapping al Banco Central de Venezuela - DOLLAR */
+/*
 app.get('/dollar-bcv/', (req, res) => {
     axios.get(`http://www.bcv.org.ve/`).then((response) => {
 
@@ -23,7 +23,6 @@ app.get('/dollar-bcv/', (req, res) => {
         let dollar = "";
         let data = [];
 
-        /* Para convertir de USD a BS.D */
         $('div', '.view-content').each((index, element) => {
             dollar = ($(element).find('div#dolar').text().trim());
             if (dollar != '') {
@@ -39,10 +38,44 @@ app.get('/dollar-bcv/', (req, res) => {
         data[0] = data[0].replace(/,/g, '.');
         res.status(200).send({ precio: data[0] });
     });
-});
+}); */
 
-/* Hace el Scrapping al Banco Central de Venezuela - EURO */
+
+
+/*
 app.get('/euro-bcv/', (req, res) => {
+    axios.get(`http://www.bcv.org.ve/`).then((response) => {
+
+        const html = response.data;
+
+        const $ = cheerio.load(html);
+
+        let euro = "";
+        let data = [];
+
+        $('div', '.view-content').each((index, element) => {
+            euro = ($(element).find('div.row.recuadrotsmc').text().trim());
+            // console.log('EUR: ', euro);
+            if (euro != '') {
+                data.push(euro);
+                return data;
+            }
+        });
+        data = [...new Set(data)];
+        data[0] = data[0].replace(/\t/g, '');
+        data[0] = data[0].replace(/\n/g, '');
+        data[0] = data[0].replace(/ /g, '');
+        data[0] = data[0].replace('EUR', '');
+        data[0] = data[0].replace(/,/g, '.');
+        moneda_euro = data[0].split('CNY')[0];
+        moneda_dollar = data[0].split('USD')[1];
+        res.status(200).send({ euro: moneda_euro, dollar: moneda_dollar });
+    });
+});
+*/
+
+/* Hace el Scrapping al Banco Central de Venezuela - DOLLAR Y EURO */
+app.get('/data-bcv', (req, res) => {
     axios.get(`http://www.bcv.org.ve/`).then((response) => {
 
         const html = response.data;
@@ -55,7 +88,7 @@ app.get('/euro-bcv/', (req, res) => {
         /* Para convertir de USD a BS.D */
         $('div', '.view-content').each((index, element) => {
             euro = ($(element).find('div.row.recuadrotsmc').text().trim());
-            console.log('EUR: ', euro);
+            // console.log('EUR: ', euro);
             if (euro != '') {
                 data.push(euro);
                 return data;
@@ -67,8 +100,9 @@ app.get('/euro-bcv/', (req, res) => {
         data[0] = data[0].replace(/ /g, '');
         data[0] = data[0].replace('EUR', '');
         data[0] = data[0].replace(/,/g, '.');
-        data[0] = data[0].split('CNY')[0];
-        res.status(200).send({ precio: data[0] });
+        moneda_euro = data[0].split('CNY')[0];
+        moneda_dollar = data[0].split('USD')[1];
+        res.status(200).send({ euro: moneda_euro, dollar: moneda_dollar });
     });
 });
 
