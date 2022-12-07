@@ -3,6 +3,5 @@ Web Scrapping de la tasa del BCV y Dollar Paralelo
 
 # Endpoints
 
-- BCV Dollar: http://localhost:3000/dollar-bcv/
-- BCV Euro: http://localhost:3000/euro-bcv/
+- BCV Dollar y Euro: http://localhost:3000/data-bcv
 - Paralelo: http://localhost:3000/dollar-paralelo/
