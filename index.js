@@ -67,7 +67,6 @@ app.get('/dollar-paralelo/', (req, res) => {
     });
 });
 
-
 app.listen(PORT, () => {
     console.log("Servidor aperturado, puedes hacer las consultas:", PORT);
 });
