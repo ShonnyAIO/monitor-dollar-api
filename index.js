@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-/* Hace el Scrapping al Banco Central de Venezuela */
+/* Hace el Scrapping al Banco Central de Venezuela - DOLLAR */
 app.get('/dollar-bcv/', (req, res) => {
     axios.get(`http://www.bcv.org.ve/`).then((response) => {
 
@@ -37,6 +37,37 @@ app.get('/dollar-bcv/', (req, res) => {
         data[0] = data[0].replace(/ /g, '');
         data[0] = data[0].replace('USD', '');
         data[0] = data[0].replace(/,/g, '.');
+        res.status(200).send({ precio: data[0] });
+    });
+});
+
+/* Hace el Scrapping al Banco Central de Venezuela - EURO */
+app.get('/euro-bcv/', (req, res) => {
+    axios.get(`http://www.bcv.org.ve/`).then((response) => {
+
+        const html = response.data;
+
+        const $ = cheerio.load(html);
+
+        let euro = "";
+        let data = [];
+
+        /* Para convertir de USD a BS.D */
+        $('div', '.view-content').each((index, element) => {
+            euro = ($(element).find('div.row.recuadrotsmc').text().trim());
+            console.log('EUR: ', euro);
+            if (euro != '') {
+                data.push(euro);
+                return data;
+            }
+        });
+        data = [...new Set(data)];
+        data[0] = data[0].replace(/\t/g, '');
+        data[0] = data[0].replace(/\n/g, '');
+        data[0] = data[0].replace(/ /g, '');
+        data[0] = data[0].replace('EUR', '');
+        data[0] = data[0].replace(/,/g, '.');
+        data[0] = data[0].split('CNY')[0];
         res.status(200).send({ precio: data[0] });
     });
 });
