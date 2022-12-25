@@ -106,8 +106,8 @@ app.get('/data-bcv', (req, res) => {
     });
 });
 
-/* Hace el Scrapping al Exchange Monitor */
-app.get('/dollar-paralelo/', (req, res) => {
+/* Hace el Scrapping al Exchange Monitor - Dolares */
+app.get('/dollar-paralelo', (req, res) => {
     axios.get('https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla').then((response) => {
 
         const html = response.data;
@@ -128,6 +128,31 @@ app.get('/dollar-paralelo/', (req, res) => {
         data[0] = data[0].replace(/ /g, '');
         data[0] = data[0].replace('BS/USD', '');
         data[0] = data[0].replace(/,/g, '.');
+        res.status(200).send({ precio: data[0] });
+    });
+});
+
+/* Hace el Scrapping al Exchange monitor de Pesos Colombianos */
+app.get('/pesos-colombianos', (req, res) => {
+    axios.get('https://exchangemonitor.net/calculadora/monedas/COP-VES').then((response) => {
+
+        const html = response.data;
+        const $ = cheerio.load(html);
+
+        let data = [];
+        let pesos_colombianos = '';
+
+        $('div', '.row').each((index, element) => {
+            pesos_colombianos = ($(element).find('h3').text().trim());
+            if (pesos_colombianos) {
+                data.push(pesos_colombianos);
+            }
+        });
+        data = [...new Set(data)];
+        data[0] = data[0].split('=')[1];
+        data[0] = data[0].split('VES')[0];
+        data[0] = data[0].replace(/,/g, '.');
+        data[0] = data[0].trim();
         res.status(200).send({ precio: data[0] });
     });
 });
